@@ -1,9 +1,9 @@
-package org.example;
+package com.eminenceapps;
 
 import java.util.ArrayList;
 
 public class Chain {
-    private final int difficulty = 4;  // Adjust for mining difficulty
+    private final int difficulty = 4; // Adjust for mining difficulty
     private final ArrayList<Block> blockchain = new ArrayList<>();
 
     public Chain() {
@@ -16,7 +16,7 @@ public class Chain {
     }
 
     public void addBlock(String data) {
-        Block newBlock = new Block(blockchain.size(),data,  difficulty,  getLatestBlock().getHashString());
+        Block newBlock = new Block(blockchain.size(), data, difficulty, getLatestBlock().getHashString());
         blockchain.add(newBlock);
     }
 
