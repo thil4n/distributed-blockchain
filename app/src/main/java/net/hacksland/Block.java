@@ -1,9 +1,11 @@
 package net.hacksland;
 
 import java.time.Instant;
+import java.util.ArrayList;
 
 public class Block {
-    private String data;
+    private ArrayList<Transaction> transactions;
+
     private int nonce;
     private int difficulty;
     private long timestamp;
@@ -12,8 +14,8 @@ public class Block {
     private String prevHash;
 
     // Constructor
-    public Block(int index, String data, int difficulty, String prevHash) {
-        this.data = data;
+    public Block(int index, ArrayList<Transaction> transactions, int difficulty, String prevHash) {
+        this.transactions = transactions;
         this.difficulty = difficulty;
         this.prevHash = prevHash;
 
@@ -24,6 +26,10 @@ public class Block {
 
     // Hash calculation
     public String calculateHash() {
+        String data = "";
+        for (Transaction tx : transactions) {
+            data += tx.toString();
+        }
         String dataToHash = data + nonce + difficulty + timestamp + prevHash;
         this.hash = StringUtil.applySha256(dataToHash);
         return hash;
@@ -43,8 +49,8 @@ public class Block {
         System.out.println("Block Mined! Hash: " + hash);
     }
 
-    public String getData() {
-        return data;
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
     }
 
     public int getNonce() {

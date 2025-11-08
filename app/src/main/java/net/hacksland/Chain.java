@@ -8,15 +8,15 @@ public class Chain {
 
     public Chain() {
         // Create the Genesis Block
-        blockchain.add(new Block(0, "Genesis Block", difficulty, "0"));
+        blockchain.add(new Block(0, new ArrayList<>(), difficulty, "0"));
     }
 
     public Block getLatestBlock() {
         return blockchain.get(blockchain.size() - 1);
     }
 
-    public void addBlock(String data) {
-        Block newBlock = new Block(blockchain.size(), data, difficulty, getLatestBlock().getHash());
+    public void addBlock(ArrayList<Transaction> transactions) {
+        Block newBlock = new Block(blockchain.size(), transactions, difficulty, getLatestBlock().getHash());
         blockchain.add(newBlock);
     }
 
@@ -40,7 +40,9 @@ public class Chain {
 
     public void printChain() {
         for (Block block : blockchain) {
-            System.out.println("Data: " + block.getData());
+            for (Transaction tx : block.getTransactions()) {
+                System.out.println("   " + tx.toString());
+            }
             System.out.println("Previous Hash: " + block.getPrevHash());
             System.out.println("Current Hash: " + block.getHash());
             System.out.println("------------------------");
@@ -50,16 +52,16 @@ public class Chain {
     public static void main(String[] args) {
         Chain chain = new Chain();
 
-        System.out.println("Mining block 1...");
-        chain.addBlock("Transaction 1");
+        ArrayList<Transaction> t1 = new ArrayList<>();
+        t1.add(new Transaction("Alice", "Bob", 5));
+        chain.addBlock(t1);
 
-        System.out.println("Mining block 2...");
-        chain.addBlock("Transaction 2");
-
-        System.out.println("Mining block 3...");
-        chain.addBlock("Transaction 3");
+        ArrayList<Transaction> t2 = new ArrayList<>();
+        t2.add(new Transaction("Bob", "Charlie", 2));
+        t2.add(new Transaction("Alice", "Dave", 3));
+        chain.addBlock(t2);
 
         chain.printChain();
-        System.out.println("Blockchain valid: " + chain.isChainValid());
     }
+
 }
