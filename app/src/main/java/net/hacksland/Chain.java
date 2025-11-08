@@ -3,7 +3,7 @@ package net.hacksland;
 import java.util.ArrayList;
 
 public class Chain {
-    private final int difficulty = 4; // Adjust for mining difficulty
+    private final int difficulty = 4;
     private final ArrayList<Block> blockchain = new ArrayList<>();
 
     public Chain() {
@@ -16,7 +16,7 @@ public class Chain {
     }
 
     public void addBlock(String data) {
-        Block newBlock = new Block(blockchain.size(), data, difficulty, getLatestBlock().getHashString());
+        Block newBlock = new Block(blockchain.size(), data, difficulty, getLatestBlock().getHash());
         blockchain.add(newBlock);
     }
 
@@ -25,12 +25,12 @@ public class Chain {
             Block currentBlock = blockchain.get(i);
             Block previousBlock = blockchain.get(i - 1);
 
-            if (!currentBlock.getHashString().equals(currentBlock.calculateHash())) {
+            if (!currentBlock.getHash().equals(currentBlock.calculateHash())) {
                 System.out.println("Block " + i + " has been tampered!");
                 return false;
             }
 
-            if (!currentBlock.getPrevHashString().equals(previousBlock.getHashString())) {
+            if (!currentBlock.getPrevHash().equals(previousBlock.getHash())) {
                 System.out.println("Block " + i + " is not linked properly!");
                 return false;
             }
@@ -40,10 +40,9 @@ public class Chain {
 
     public void printChain() {
         for (Block block : blockchain) {
-            System.out.println("Block #" + block.getIndex());
             System.out.println("Data: " + block.getData());
-            System.out.println("Previous Hash: " + block.getPrevHashString());
-            System.out.println("Current Hash: " + block.getHashString());
+            System.out.println("Previous Hash: " + block.getPrevHash());
+            System.out.println("Current Hash: " + block.getHash());
             System.out.println("------------------------");
         }
     }

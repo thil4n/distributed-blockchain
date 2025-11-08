@@ -3,54 +3,44 @@ package net.hacksland;
 import java.time.Instant;
 
 public class Block {
-    private int index;
     private String data;
     private int nonce;
     private int difficulty;
     private long timestamp;
-    private String creator;
-    private String signature;
-    private String hashString;
-    private String prevHashString;
+
+    private String hash;
+    private String prevHash;
 
     // Constructor
-    public Block(int index, String data, int difficulty, String prevHashString) {
-        this.index = index;
+    public Block(int index, String data, int difficulty, String prevHash) {
         this.data = data;
         this.difficulty = difficulty;
-        this.prevHashString = prevHashString;
-        // this.creator = creator;
-        // this.signature = signature;
-        this.timestamp = Instant.now().toEpochMilli(); // Set current timestamp
-        this.hashString = calculateHash(); // Calculate initial hash
+        this.prevHash = prevHash;
 
-        mineBlock(); // Mine the block
+        this.timestamp = Instant.now().toEpochMilli();
+
+        mineBlock();
     }
 
     // Hash calculation
     public String calculateHash() {
-        String dataToHash = index + data + nonce + difficulty + timestamp + creator + signature + prevHashString;
-        this.hashString = StringUtil.applySha256(dataToHash);
-        return hashString;
+        String dataToHash = data + nonce + difficulty + timestamp + prevHash;
+        this.hash = StringUtil.applySha256(dataToHash);
+        return hash;
     }
 
     // Mining process with Proof-of-Work
     public void mineBlock() {
         String target = "0".repeat(difficulty);
         nonce = 0;
-        hashString = calculateHash();
+        hash = calculateHash();
 
-        while (!hashString.startsWith(target)) {
+        while (!hash.startsWith(target)) {
             nonce++;
-            hashString = calculateHash();
+            hash = calculateHash();
         }
 
-        System.out.println("Block Mined! Hash: " + hashString);
-    }
-
-    // Getters
-    public int getIndex() {
-        return index;
+        System.out.println("Block Mined! Hash: " + hash);
     }
 
     public String getData() {
@@ -69,19 +59,11 @@ public class Block {
         return timestamp;
     }
 
-    public String getCreator() {
-        return creator;
+    public String getHash() {
+        return hash;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
-    public String getHashString() {
-        return hashString;
-    }
-
-    public String getPrevHashString() {
-        return prevHashString;
+    public String getPrevHash() {
+        return prevHash;
     }
 }
