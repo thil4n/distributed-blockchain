@@ -1,4 +1,4 @@
-package com.eminenceapps;
+package net.hacksland;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
