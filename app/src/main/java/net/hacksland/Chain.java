@@ -1,6 +1,8 @@
 package net.hacksland;
 
 import java.util.ArrayList;
+import java.util.Set;
+import com.google.gson.*;
 
 public class Chain {
     private final int difficulty = 4;
@@ -59,4 +61,25 @@ public class Chain {
             System.out.println("------------------------");
         }
     }
+
+    public void addExternalBlock(Block newBlock) {
+        Block latestBlock = getLatestBlock();
+
+        if (latestBlock.getHash().equals(newBlock.getPrevHash())) {
+            blockchain.add(newBlock);
+            System.out.println("Accepted new block from peer!");
+        } else {
+            System.out.println("Rejected block: invalid previous hash!");
+        }
+    }
+
+    public void broadcastBlock(Block newBlock, Set<String> peers) {
+        Gson gson = new Gson();
+        String json = gson.toJson(newBlock);
+
+        for (String peer : peers) {
+            NetworkClient.postJSON(peer + "/receive-block", json);
+        }
+    }
+
 }
