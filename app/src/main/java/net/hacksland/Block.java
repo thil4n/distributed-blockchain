@@ -31,7 +31,7 @@ public class Block {
             data += tx.toString();
         }
         String dataToHash = data + nonce + difficulty + timestamp + prevHash;
-        this.hash = StringUtil.applySha256(dataToHash);
+        this.hash = CryptoUtils.applySha256(dataToHash);
         return hash;
     }
 

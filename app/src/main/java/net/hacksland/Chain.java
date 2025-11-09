@@ -6,6 +6,8 @@ public class Chain {
     private final int difficulty = 4;
     private final ArrayList<Block> blockchain = new ArrayList<>();
 
+    private TransactionPool pool = new TransactionPool();
+
     public Chain() {
         // Create the Genesis Block
         blockchain.add(new Block(0, new ArrayList<>(), difficulty, "0"));
@@ -18,6 +20,13 @@ public class Chain {
     public void addBlock(ArrayList<Transaction> transactions) {
         Block newBlock = new Block(blockchain.size(), transactions, difficulty, getLatestBlock().getHash());
         blockchain.add(newBlock);
+    }
+
+    public void minePendingTransactions() {
+        Block block = new Block(blockchain.size(), pool.getPendingTransactions(), difficulty,
+                getLatestBlock().getHash());
+        blockchain.add(block);
+        pool.clear();
     }
 
     public boolean isChainValid() {
