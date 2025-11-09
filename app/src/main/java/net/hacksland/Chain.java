@@ -6,10 +6,9 @@ public class Chain {
     private final int difficulty = 4;
     private final ArrayList<Block> blockchain = new ArrayList<>();
 
-    private TransactionPool pool = new TransactionPool();
+    private TransactionPool transactionPool = new TransactionPool();
 
     public Chain() {
-        // Create the Genesis Block
         blockchain.add(new Block(0, new ArrayList<>(), difficulty, "0"));
     }
 
@@ -17,16 +16,19 @@ public class Chain {
         return blockchain.get(blockchain.size() - 1);
     }
 
-    public void addBlock(ArrayList<Transaction> transactions) {
-        Block newBlock = new Block(blockchain.size(), transactions, difficulty, getLatestBlock().getHash());
-        blockchain.add(newBlock);
+    public void addTransaction(Transaction tx) {
+        if (tx.isValid()) {
+            transactionPool.addTransaction(tx);
+        } else {
+            System.out.println("Invalid transaction! Rejected.");
+        }
     }
 
     public void minePendingTransactions() {
-        Block block = new Block(blockchain.size(), pool.getPendingTransactions(), difficulty,
+        Block block = new Block(blockchain.size(), transactionPool.getPendingTransactions(), difficulty,
                 getLatestBlock().getHash());
         blockchain.add(block);
-        pool.clear();
+        transactionPool.clear();
     }
 
     public boolean isChainValid() {
@@ -57,20 +59,4 @@ public class Chain {
             System.out.println("------------------------");
         }
     }
-
-    public static void main(String[] args) {
-        Chain chain = new Chain();
-
-        ArrayList<Transaction> t1 = new ArrayList<>();
-        t1.add(new Transaction("Alice", "Bob", 5));
-        chain.addBlock(t1);
-
-        ArrayList<Transaction> t2 = new ArrayList<>();
-        t2.add(new Transaction("Bob", "Charlie", 2));
-        t2.add(new Transaction("Alice", "Dave", 3));
-        chain.addBlock(t2);
-
-        chain.printChain();
-    }
-
 }
