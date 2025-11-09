@@ -6,29 +6,17 @@ public class Chain {
     private final int difficulty = 4;
     private final ArrayList<Block> blockchain = new ArrayList<>();
 
-    private TransactionPool transactionPool = new TransactionPool();
-
     public Chain() {
-        blockchain.add(new Block(0, new ArrayList<>(), difficulty, "0"));
+        blockchain.add(new Block(0, "Genesis block", difficulty, "0"));
+    }
+
+    public void addBlock(String data) {
+        Block newBlock = new Block(blockchain.size(), data, difficulty, getLatestBlock().getHash());
+        blockchain.add(newBlock);
     }
 
     public Block getLatestBlock() {
         return blockchain.get(blockchain.size() - 1);
-    }
-
-    public void addTransaction(Transaction tx) {
-        if (tx.isValid()) {
-            transactionPool.addTransaction(tx);
-        } else {
-            System.out.println("Invalid transaction! Rejected.");
-        }
-    }
-
-    public void minePendingTransactions() {
-        Block block = new Block(blockchain.size(), transactionPool.getPendingTransactions(), difficulty,
-                getLatestBlock().getHash());
-        blockchain.add(block);
-        transactionPool.clear();
     }
 
     public boolean isChainValid() {
@@ -50,13 +38,15 @@ public class Chain {
     }
 
     public void printChain() {
-        for (Block block : blockchain) {
-            for (Transaction tx : block.getTransactions()) {
-                System.out.println("   " + tx.toString());
-            }
-            System.out.println("Previous Hash: " + block.getPrevHash());
-            System.out.println("Current Hash: " + block.getHash());
-            System.out.println("------------------------");
+        System.out.println("------------------------");
+        System.out.println("Printing the blocks");
+
+        for (int i = 0; i < blockchain.size(); i++) {
+            System.out.println();
+            System.out.println("Block : " + i);
+            System.out.println("Previous Hash : " + blockchain.get(i).getPrevHash());
+            System.out.println("Current Hash  : " + blockchain.get(i).getHash());
         }
+        System.out.println("------------------------");
     }
 }
