@@ -39,9 +39,10 @@ public class Block {
         while (!hash.startsWith(target)) {
             nonce++;
             hash = calculateHash();
+            System.out.println("Mining... Nonce: " + nonce + " Hash: " + hash);
         }
 
-        System.out.println("Block mined with the hash : " + hash);
+        System.out.println("\nBlock mined with the hash  : " + hash + "\n");
     }
 
     public String getData() {
